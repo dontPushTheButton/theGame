@@ -1,10 +1,11 @@
 ﻿module.exports.harvester = function harvester(creep) {
-    var sources,
-//        targets,
-        bestSource,
-        bestTarget,
-        needsToMove,
-        moveToHere;
+    var sources
+        ,targets
+        ,bestSource
+        ,bestTarget
+        ,needsToMove
+        ,moveToHere
+        ,hasStorage;
 
     sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
     //    targets = creep.room.find(FIND_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;}}); 
@@ -24,7 +25,11 @@
     //    if (targets.length > 0) {
     //        bestTarget = creep.pos.findClosestByPath(targets);
     //    } else {
-    bestTarget = creep.room.storage;
+    if (hasStorage) {
+        bestTarget = creep.room.storage;
+    } else {
+        bestTarget = Game.spawns['Spawn1'];
+    }
     //    }
 
 
@@ -156,6 +161,10 @@ module.exports.spawnTender = function spawnTender(creep) {
         creepPath;
 
     targets = creep.room.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity; } });
+    storage = creep.room.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType == STRUCTURE_STORAGE); } });
+    sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
+
+    console.log(JSON.stringify(storage));
 
     if (targets.length > 0) {
         if (targets.length > 1) {
@@ -187,7 +196,11 @@ module.exports.spawnTender = function spawnTender(creep) {
         }
     } else if (!creep.memory.hasOwnProperty('offloading') || !creep.memory.hasOwnProperty('destination')) {
         creep.memory.offloading = false;
-        creep.memory.destination = creep.room.storage.id;
+        if (storage.length == 1) {
+            creep.memory.destination = creep.room.storage.id;
+        } else {
+            creep.memory.destination = sources[0];
+        }
         creep.memory.pathToDestination = creep.pos.findPathTo(Game.getObjectById(creep.memory.destination));
     } else if (creep.memory.offloading && Game.getObjectById(creep.memory.destination).energy == Game.getObjectById(creep.memory.destination).energyCapacity) {
         if (typeof bestTarget !== 'undefined') {
@@ -199,10 +212,15 @@ module.exports.spawnTender = function spawnTender(creep) {
             creep.memory.pathToDestination = creep.pos.findPathTo(Game.getObjectById(creep.memory.destination));
         }
     } else if (!creep.memory.offloading) {
-        if (creep.memory.destination != creep.room.storage.id) {
+        if (storage.length ==1) {
+            if (creep.memory.destination != creep.room.storage.id) {
             creep.memory.destination = creep.room.storage.id;
-            creep.memory.pathToDestination = creep.pos.findPathTo(Game.getObjectById(creep.memory.destination));
+            }
+        } else {
+            creep.memory.destination = sources[0];
         }
+ //       creep.memory.pathToDestination = creep.pos.findPathTo(Game.getObjectById(creep.memory.destination));
+
     }
 
     //    console.log(creep.pos.findPathTo(Game.getObjectById(creep.memory.destination)));

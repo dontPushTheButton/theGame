@@ -42,7 +42,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
     console.log('Attackers: ' + currentAttackers.length);
     console.log('Scavvers: ' + currentScavvers.length);
 
-    if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 0 /* && */) {
+    if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
         lastHarvester = currentHarvesters.pop();
         currentSpawnTenders.push(lastHarvester);
         changeRole(lastHarvester, 'spawnTender');
