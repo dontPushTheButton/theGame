@@ -275,53 +275,53 @@ module.exports.scavver = function scavver(creep, station) {
     var sources
        , bestSource;
     var bestTarget = Game.rooms[creep.memory.home].storage;
-    if ((Game.flags[station].pos.roomName != creep.room.name && !creep.memory.offloading) || (creep.pos.x < 3 && !creep.memory.offloading)) {
-        creep.moveTo(Game.flags[station]);
-    } else {
-        sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
-        //            console.log(sources);
-        if (sources.length > 0) {
-            bestSource = sources[0];
-            //            console.log(bestSource);
-        }
+    //if ((Game.flags[station].pos.roomName != creep.room.name && !creep.memory.offloading) || (creep.pos.x < 3 && !creep.memory.offloading)) {
+    //    creep.moveTo(Game.flags[station]);
+    //} else {
+    //    sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
+    //    //            console.log(sources);
+    //    if (sources.length > 0) {
+    //        bestSource = sources[0];
+    //        //            console.log(bestSource);
+    //    }
 
-        if ((creep.carry.energy == 0 && creep.memory.offloading)) {
-            creep.memory.offloading = false;
-            creep.memory.destination = bestSource.id;
-        } else if (creep.carry.energy == creep.carryCapacity && !creep.memory.offloading) {
-            creep.memory.offloading = true
-            creep.memory.destination = bestTarget.id;
-        } else if (!creep.memory.hasOwnProperty('offloading') || !creep.memory.hasOwnProperty('destination')) {
-            creep.memory.offloading = false;
-            creep.memory.destination = bestSource.id;
-        } else if (creep.carry.energy < creep.carryCapacity && Game.getObjectById(creep.memory.destination).energy == 0) {
-            creep.memory.destination = bestSource.id;
-        } else if (creep.memory.offloading && Game.getObjectById(creep.memory.destination).energy == Game.getObjectById(creep.memory.destination).energyCapacity) {
-            creep.memory.destination = bestTarget.id;
-        } else if (!creep.memory.offloading) {
-            if (Game.getObjectById(creep.memory.destination).energy == 0) {
-                creep.memory.destination = bestSource.id;
-            }
-        } else if (!creep.memory.offloading && (Game.getObjectById(creep.memory.destination).pos.roomName != creep.pos.roomName)) {
-            creep.memory.destination = bestSource.id;
-        }
+    //    if ((creep.carry.energy == 0 && creep.memory.offloading)) {
+    //        creep.memory.offloading = false;
+    //        creep.memory.destination = bestSource.id;
+    //    } else if (creep.carry.energy == creep.carryCapacity && !creep.memory.offloading) {
+    //        creep.memory.offloading = true
+    //        creep.memory.destination = bestTarget.id;
+    //    } else if (!creep.memory.hasOwnProperty('offloading') || !creep.memory.hasOwnProperty('destination')) {
+    //        creep.memory.offloading = false;
+    //        creep.memory.destination = bestSource.id;
+    //    } else if (creep.carry.energy < creep.carryCapacity && Game.getObjectById(creep.memory.destination).energy == 0) {
+    //        creep.memory.destination = bestSource.id;
+    //    } else if (creep.memory.offloading && Game.getObjectById(creep.memory.destination).energy == Game.getObjectById(creep.memory.destination).energyCapacity) {
+    //        creep.memory.destination = bestTarget.id;
+    //    } else if (!creep.memory.offloading) {
+    //        if (Game.getObjectById(creep.memory.destination).energy == 0) {
+    //            creep.memory.destination = bestSource.id;
+    //        }
+    //    } else if (!creep.memory.offloading && (Game.getObjectById(creep.memory.destination).pos.roomName != creep.pos.roomName)) {
+    //        creep.memory.destination = bestSource.id;
+    //    }
 
-        if (!creep.memory.offloading && Game.getObjectById(creep.memory.destination).pos.roomName != creep.pos.roomName) {
-            creep.memory.destination = bestSource.id;
-        }
+    //    if (!creep.memory.offloading && Game.getObjectById(creep.memory.destination).pos.roomName != creep.pos.roomName) {
+    //        creep.memory.destination = bestSource.id;
+    //    }
 
-        moveToHere = Game.getObjectById(creep.memory.destination);
-        needsToMove = !creep.pos.isNearTo(moveToHere);
-        creep.say(!creep.memory.offloading);
+    //    moveToHere = Game.getObjectById(creep.memory.destination);
+    //    needsToMove = !creep.pos.isNearTo(moveToHere);
+    //    creep.say(!creep.memory.offloading);
 
-        if (needsToMove) {
-            creep.moveTo(moveToHere);
-        } else if (creep.memory.offloading) {
-            creep.transfer(moveToHere, RESOURCE_ENERGY);
-        } else if (!creep.memory.offloading) {
-            var result = creep.harvest(moveToHere);
-            console.log(result);
-        }
-
-    }
+    //    if (needsToMove) {
+    //        creep.moveTo(moveToHere);
+    //    } else if (creep.memory.offloading) {
+    //        creep.transfer(moveToHere, RESOURCE_ENERGY);
+    //    } else if (!creep.memory.offloading) {
+    //        var result = creep.harvest(moveToHere);
+    //        console.log(result);
+    //    }
+    
+    //}
 }
