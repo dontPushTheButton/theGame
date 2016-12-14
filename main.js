@@ -1,15 +1,15 @@
-﻿var honorTheDead = require('honorTheDead');
+﻿
+var honorTheDead = require('honorTheDead');
 var spawnMyCreeps = require('spawnMyCreeps');
 var creepAssignment = require('creepAssignment');
 var behaviorTower = require('behavior.tower');
-//var testingGround = require('testingGround');
 
 var minColorGuard = 0;
-var minAttackers = 2;
-var minUpgraders = 2;
-var minHarvesters = 5;
-var minBuilders = 2;
-var minTowerTenders = 1;
+var minAttackers = 0;
+var minUpgraders = 3;
+var minHarvesters = 2;
+var minBuilders = 1;
+var minTowerTenders = 0;
 var minSpawnTenders = 0;
 var minBasicCreeps = minHarvesters
                    + minUpgraders
@@ -30,7 +30,7 @@ module.exports.loop = function () {
 
     for (var spawn in spawnList) {
         var nameOfRoom = Game.spawns[spawn].pos.roomName;
-        console.log(containsRoom(nameOfRoom, roomsInfo));
+        //console.log(containsRoom(nameOfRoom, roomsInfo));
         if (!containsRoom(nameOfRoom, roomsInfo)) {
             roomsInfo.push({ ID: nameOfRoom, "rcl": Game.rooms[nameOfRoom].controller.level });
             roomsInfo[roomsInfo.length - 1].name = nameOfRoom;
@@ -38,8 +38,8 @@ module.exports.loop = function () {
         //        console.log(roomsInfo[0].ID);
     }
 
-    console.log(roomsInfo.length);
-    console.log(JSON.stringify(roomsInfo));
+    //console.log(roomsInfo.length);
+    //console.log(JSON.stringify(roomsInfo));
 
     honorTheDead();
     spawnMyCreeps.spawnMyCreeps(minBasicCreeps);
