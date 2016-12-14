@@ -34,13 +34,13 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
 
     //    console.log(currentHarvesters);
 
-    console.log('Harvesters: ' + currentHarvesters.length);
-    console.log('Upgraders: ' + currentUpgraders.length);
-    console.log('Tower Tenders: ' + currentTowerTenders.length);
-    console.log('Spawn Tenders: ' + currentSpawnTenders.length);
-    console.log('Builders: ' + currentBuilders.length);
-    console.log('Attackers: ' + currentAttackers.length);
-    console.log('Scavvers: ' + currentScavvers.length);
+    //console.log('Harvesters: ' + currentHarvesters.length);
+    //console.log('Upgraders: ' + currentUpgraders.length);
+    //console.log('Tower Tenders: ' + currentTowerTenders.length);
+    //console.log('Spawn Tenders: ' + currentSpawnTenders.length);
+    //console.log('Builders: ' + currentBuilders.length);
+    //console.log('Attackers: ' + currentAttackers.length);
+    //console.log('Scavvers: ' + currentScavvers.length);
 
     if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
         lastHarvester = currentHarvesters.pop();
@@ -58,9 +58,9 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
         Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'builder';
     }
 
-    if (currentHarvesters.length >= minHarvesters && currentAttackers.length < 2) {
-        var result = Game.spawns.Spawn1.createCreep([MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK], undefined, { role: 'attacker' });
-    }
+    //if (currentHarvesters.length >= minHarvesters && currentAttackers.length < 2) {
+    //    var result = Game.spawns.Spawn1.createCreep([MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK], undefined, { role: 'attacker' });
+    //}
     if (currentHarvesters.length >= minHarvesters && currentScavvers.length < 1) {
         var homeRoom = Game.spawns.Spawn1.pos.roomName;
         var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
