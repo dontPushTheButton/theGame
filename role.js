@@ -11,33 +11,49 @@
         ,currentDestinationObject;
 
     bestSourceID = creepPrimitives.findBestSource(creep);
-    bestDropoffID = creepPrimitives.findBestDropoff(creep);
+    if (!creep.room.storage || creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
+        bestDropoffID = creepPrimitives.findBestDropoff(creep);
+    } else {
+        bestDropoffID = creep.room.storage.id;
+    }
+    //bestDropoffID = creepPrimitives.findBestDropoff(creep);
     //console.log(bestDropoffID);
     currentDestinationObject = Game.getObjectById(creep.memory.destination);
 
+    //console.log(!creep.memory.hasOwnProperty('offloading'));
 
     //    console.log(creep + ' ' + JSON.stringify(Game.getObjectById(creep.memory.destination)));
     if ((creep.carry.energy == 0 && creep.memory.offloading)) {
         creep.memory.offloading = false;
         creep.memory.destination = bestSourceID;
-    } else if (creep.carry.energy == creep.carryCapacity && !creep.memory.offloading) {
+        //console.log('test1');
+    }else if (creep.carry.energy == creep.carryCapacity && !creep.memory.offloading) {
         creep.memory.offloading = true
         creep.memory.destination = bestDropoffID;
-    } else if (!creep.memory.hasOwnProperty('offloading') || !creep.memory.hasOwnProperty('destination')) {
+        //console.log('test2');
+    } else if  (!creep.memory.hasOwnProperty('offloading') || !creep.memory.hasOwnProperty('destination')) {
         creep.memory.offloading = false;
         creep.memory.destination = bestSourceID;
+        //console.log('test3');
     } else if (creep.carry.energy < creep.carryCapacity && currentDestinationObject.energy == 0 && !currentDestinationObject.structureType === 'extension') {
         creep.memory.destination = bestSourceID;
-    } else if (creep.memory.offloading && Game.getObjectById(creep.memory.destination).energy == Game.getObjectById(creep.memory.destination).energyCapacity) {
+        //console.log('test4');
+    } else if (creep.memory.offloading && Game.getObjectById(creep.memory.destination).energy === Game.getObjectById(creep.memory.destination).energyCapacity && bestDropoffID !== creep.memory.destination) {
         creep.memory.destination = bestDropoffID;
+        //console.log('test5');
     } else if (!creep.memory.offloading) {
         if (Game.getObjectById(creep.memory.destination).energy == 0) {
             creep.memory.destination = bestSourceID;
+            //console.log('test6');
         }
     } else if ((currentDestinationObject.structureType === 'extension' || currentDestinationObject.structureType === 'spawn') && currentDestinationObject.energy === currentDestinationObject.energyCapacity) {
         creep.memory.destination = bestDropoffID;
+        //console.log('test7');
     }
 
+    //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable);
+    //console.log(!!creep.room.storage);
+    //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable && !!creep.room.storage);
     moveToHere = Game.getObjectById(creep.memory.destination);
     needsToMove = !creep.pos.isNearTo(moveToHere);
 //    creep.say(needsToMove);
@@ -69,10 +85,12 @@ module.exports.upgrader = function upgrader(creep) {
     if ((creep.memory.upgrading && creep.carry.energy == 0) || !creep.memory.hasOwnProperty('upgrading')) {
         creep.memory.upgrading = false;
         creep.memory.destination = bestSourceID;
+        //console.log('test1');
     }
     if (!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
         creep.memory.upgrading = true;
         creep.memory.destination = creep.room.controller.id;
+        //console.log('test2');
     }
 
     moveToHere = Game.getObjectById(creep.memory.destination);

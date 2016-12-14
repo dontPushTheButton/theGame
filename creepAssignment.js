@@ -61,26 +61,26 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
     //if (currentHarvesters.length >= minHarvesters && currentAttackers.length < 2) {
     //    var result = Game.spawns.Spawn1.createCreep([MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK], undefined, { role: 'attacker' });
     //}
-    if (currentHarvesters.length >= minHarvesters && currentScavvers.length < 1) {
+    if (currentHarvesters.length >= minHarvesters && currentScavvers.length < 1 && null) {
         var homeRoom = Game.spawns.Spawn1.pos.roomName;
-        var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
-                                                   , undefined
-                                                   , {
-                                                       role: 'scavver'
-                                                    , home: homeRoom
-                                                    , offloading: false
-                                                    , destFlag: 'Flag2'
-                                                   });
+        //var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
+        //                                           , undefined
+        //                                           , {
+        //                                               role: 'scavver'
+        //                                            , home: homeRoom
+        //                                            , offloading: false
+        //                                            , destFlag: 'Flag2'
+        //                                           });
     } else if (currentHarvesters.length >= minHarvesters && (currentScavvers.length == 1 && currentScavvers.length < 2)) {
         var homeRoom = Game.spawns.Spawn1.pos.roomName;
-        var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
-                                                   , undefined
-                                                   , {
-                                                       role: 'scavver'
-                                                    , home: homeRoom
-                                                    , offloading: false
-                                                    , destFlag: 'Flag3'
-                                                   });
+        //var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
+        //                                           , undefined
+        //                                           , {
+        //                                               role: 'scavver'
+        //                                            , home: homeRoom
+        //                                            , offloading: false
+        //                                            , destFlag: 'Flag3'
+        //                                           });
     }
 
 

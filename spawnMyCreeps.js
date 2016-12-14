@@ -11,7 +11,7 @@
             ,result;
 
         creepsInTheRoom = Game.rooms[allSpawns[i].room.name].find(FIND_MY_CREEPS).length;
-        console.log('creeps = ' + creepsInTheRoom.toString());
+        //console.log('creeps = ' + creepsInTheRoom.toString());
         modifiedBody = basicCreep;
 
         if (creepsInTheRoom < minBasicCreeps) {
