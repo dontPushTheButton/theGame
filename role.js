@@ -54,16 +54,27 @@
     //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable);
     //console.log(!!creep.room.storage);
     //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable && !!creep.room.storage);
-    moveToHere = Game.getObjectById(creep.memory.destination);
-    needsToMove = !creep.pos.isNearTo(moveToHere);
-//    creep.say(needsToMove);
+    //moveToHere = Game.getObjectById(creep.memory.destination);
+    //needsToMove = !creep.pos.isNearTo(moveToHere);
+    //creep.say(needsToMove);
 
-    if (needsToMove) {
-        creep.moveTo(moveToHere);
-    } else if (creep.memory.offloading) {
-        creep.transfer(moveToHere, RESOURCE_ENERGY);
-    } else if (!creep.memory.offloading) {
-        creep.harvest(moveToHere);
+    //if (needsToMove) {
+    //    creep.moveTo(moveToHere);
+    //} else if (creep.memory.offloading) {
+    //    creep.transfer(moveToHere, RESOURCE_ENERGY);
+    //} else if (!creep.memory.offloading) {
+    //    creep.harvest(moveToHere);
+    //}
+    moveToHere = Game.getObjectById(creep.memory.destination);
+    needsToMove = creepPrimitives.moveCreep(creep, 0);
+    //creep.say(needsToMove);
+
+    if (!needsToMove) {
+        if (creep.memory.offloading) {
+            creep.transfer(moveToHere, RESOURCE_ENERGY);
+        } else if (!creep.memory.offloading) {
+            creep.harvest(moveToHere);
+        }
     }
 }
 

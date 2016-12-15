@@ -57,11 +57,21 @@ module.exports.findBestProject = function findBestProject(creep) {
     return bestProjectsID;
 }
 
-module.exports.moveCreep = function moveCreep(creep) {
+module.exports.moveCreep = function moveCreep(creep, range) {
+    var range = range || 1;
 
+    var moveToHere
+        ,needsToMove;
 
+    moveToHere = Game.getObjectById(creep.memory.destination);
+    needsToMove = !creep.pos.inRangeTo(moveToHere,range);
+    //console.log(range);
+    creep.say(needsToMove);
+    if (needsToMove) {
+        creep.moveTo(moveToHere);
+    }
 
-    return
+    return needsToMove;
 }
 
 

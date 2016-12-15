@@ -6,9 +6,9 @@ var behaviorTower = require('behavior.tower');
 
 var minColorGuard = 0;
 var minAttackers = 0;
-var minUpgraders = 4;
-var minHarvesters = 1;
-var minBuilders = 0;
+var minUpgraders = 3;
+var minHarvesters = 2;
+var minBuilders = 1;
 var minTowerTenders = 0;
 var minSpawnTenders = 0;
 var minBasicCreeps = minHarvesters
