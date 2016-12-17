@@ -1,5 +1,6 @@
-﻿module.exports.harvester = function harvester(creep) {
-    var creepPrimitives = require('creepPrimitives');
+﻿var creepPrimitives = require('creepPrimitives');
+
+module.exports.harvester = function harvester(creep) {
     var sources
         ,targets
         ,bestSourceID
@@ -11,18 +12,17 @@
         ,currentDestinationObject;
 
     bestSourceID = creepPrimitives.findBestSource(creep);
+    //if (bestSourceID < 0) {
+    //    return -1;
+    //}
     if (!creep.room.storage || creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
         bestDropoffID = creepPrimitives.findBestDropoff(creep);
     } else {
         bestDropoffID = creep.room.storage.id;
     }
-    //bestDropoffID = creepPrimitives.findBestDropoff(creep);
-    //console.log(bestDropoffID);
+
     currentDestinationObject = Game.getObjectById(creep.memory.destination);
 
-    //console.log(!creep.memory.hasOwnProperty('offloading'));
-
-    //    console.log(creep + ' ' + JSON.stringify(Game.getObjectById(creep.memory.destination)));
     if ((creep.carry.energy == 0 && creep.memory.offloading)) {
         creep.memory.offloading = false;
         creep.memory.destination = bestSourceID;
@@ -51,23 +51,8 @@
         //console.log('test7');
     }
 
-    //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable);
-    //console.log(!!creep.room.storage);
-    //console.log(creep.room.energyAvailable === creep.room.energyCapacityAvailable && !!creep.room.storage);
-    //moveToHere = Game.getObjectById(creep.memory.destination);
-    //needsToMove = !creep.pos.isNearTo(moveToHere);
-    //creep.say(needsToMove);
-
-    //if (needsToMove) {
-    //    creep.moveTo(moveToHere);
-    //} else if (creep.memory.offloading) {
-    //    creep.transfer(moveToHere, RESOURCE_ENERGY);
-    //} else if (!creep.memory.offloading) {
-    //    creep.harvest(moveToHere);
-    //}
     moveToHere = Game.getObjectById(creep.memory.destination);
     needsToMove = creepPrimitives.moveCreep(creep, 0);
-    //creep.say(needsToMove);
 
     if (!needsToMove) {
         if (creep.memory.offloading) {
@@ -79,7 +64,6 @@
 }
 
 module.exports.upgrader = function upgrader(creep) {
-    var creepPrimitives = require('creepPrimitives');
     var hasStorage
         ,needsToMove
         ,moveToHere
@@ -91,6 +75,9 @@ module.exports.upgrader = function upgrader(creep) {
     }
     //console.log(hasStorage);
     bestSourceID = creepPrimitives.findBestSource(creep);
+    if (bestSourceID === -1) {
+        return -1;
+    }
     //sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
 
     if ((creep.memory.upgrading && creep.carry.energy == 0) || !creep.memory.hasOwnProperty('upgrading')) {
@@ -105,20 +92,23 @@ module.exports.upgrader = function upgrader(creep) {
     }
 
     moveToHere = Game.getObjectById(creep.memory.destination);
-    needsToMove = !creep.pos.isNearTo(moveToHere);
+    if (moveToHere.structureType === 'controller') {
+        needsToMove = creepPrimitives.moveCreep(creep, 3);
+    } else {
+        needsToMove = creepPrimitives.moveCreep(creep, 0);
+    }
     //    creep.say(needsToMove);
 
-    if (needsToMove) {
-        creep.moveTo(moveToHere);
-    } else if (creep.memory.upgrading) {
+    if (!needsToMove) {
+         if (creep.memory.upgrading) {
         creep.upgradeController(Game.getObjectById(creep.memory.destination));
-    } else if (!creep.memory.upgrading) {
-        creep.harvest(moveToHere);
+         } else if (!creep.memory.upgrading) {
+             creep.harvest(moveToHere);
+         }
     }
 }
 
 module.exports.builder = function builder(creep) {
-    var creepPrimitives = require('creepPrimitives');
     var moveToHere
         ,creepPath
         ,needsToMove
@@ -152,7 +142,7 @@ module.exports.builder = function builder(creep) {
 
 }
 
-module.exports.towerTender = function towerTender(creep) {
+module.exports.towerTender = function towerTender(creep,roomName) {
     //    creep.say(creep.memory.tending)
     if (creep.memory.tending && creep.carry.energy == 0) {
         creep.memory.tending = false;
@@ -163,7 +153,7 @@ module.exports.towerTender = function towerTender(creep) {
     }
 
     if (creep.memory.tending) {
-        var towers = Game.rooms['E38S46'].find(FIND_STRUCTURES, {
+        var towers = Game.rooms[roomName].find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_TOWER)
             }

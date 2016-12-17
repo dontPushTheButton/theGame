@@ -1,13 +1,14 @@
 ﻿
-var honorTheDead = require('honorTheDead');
-var spawnMyCreeps = require('spawnMyCreeps');
-var creepAssignment = require('creepAssignment');
 var behaviorTower = require('behavior.tower');
+var creepAssignment = require('creepAssignment');
+var creepPrimitives = require('creepPrimitives');
+var bookkeeping = require('bookkeeping');
+var spawnMyCreeps = require('spawnMyCreeps');
 
 var minColorGuard = 0;
 var minAttackers = 0;
 var minUpgraders = 3;
-var minHarvesters = 2;
+var minHarvesters = 3;
 var minBuilders = 1;
 var minTowerTenders = 0;
 var minSpawnTenders = 0;
@@ -21,51 +22,37 @@ var minWallHealth = 100000;
 var minRampartHealth = 3000;
 var roomsInfo = [];
 
-
 module.exports.loop = function () {
 
-    var spawnList = Game.spawns;
-    var flagList = Game.flags;
-    //    console.log(JSON.stringify(roomList));
+    bookkeeping.honorTheDead();
 
-    for (var spawn in spawnList) {
-        var nameOfRoom = Game.spawns[spawn].pos.roomName;
-        //console.log(containsRoom(nameOfRoom, roomsInfo));
-        if (!containsRoom(nameOfRoom, roomsInfo)) {
-            roomsInfo.push({ ID: nameOfRoom, "rcl": Game.rooms[nameOfRoom].controller.level });
-            roomsInfo[roomsInfo.length - 1].name = nameOfRoom;
+
+    var census;
+
+    roomsInfo = bookkeeping.getRoomsInfo();
+    census = bookkeeping.census();
+
+    //console.log(JSON.stringify(census));
+
+    for (i = 0; i<roomsInfo.length; i++) {
+        var roomName = roomsInfo[i].ID;
+        spawnMyCreeps.spawnAllCreeps(minBasicCreeps, roomName, census);
+        creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders, roomName);
+
+        hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
+
+        while (hostiles.length > 0) {
+            behaviorTower.defendRoom(roomName, hostiles);
         }
-        //        console.log(roomsInfo[0].ID);
+
+        behaviorTower.repairRamparts(roomName,minRampartHealth);
+        behaviorTower.repairWalls(roomName,0.25,minWallHealth);
+        behaviorTower.maintainRoads(roomName,0.75);
     }
 
-    //console.log(roomsInfo.length);
-    //console.log(JSON.stringify(roomsInfo));
-
-    honorTheDead();
-    spawnMyCreeps.spawnMyCreeps(minBasicCreeps);
-    creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders);
+    //bookkeeping.honorTheDead();
 
 
-    //    hostiles = Game.rooms['E38S46'].find(FIND_HOSTILE_CREEPS);
-
-    //    spawnMyCreeps.spawnMyCreeps(minBasicCreeps);
-
-    //    while (hostiles.length > 0) {
-    //        behaviorTower.defendRoom('E38S46', hostiles);
-    //    }
-
-    //    behaviorTower.repairRamparts('E38S46',minRampartHealth);
-    //    behaviorTower.repairWalls('E38S46',0.25,minWallHealth);
-    //    behaviorTower.maintainRoads('E38S46',0.75);
 
 }
 
-function containsRoom(room, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i].ID == room) {
-            return true;
-        }
-    }
-    return false;
-}

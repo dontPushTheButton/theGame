@@ -1,6 +1,6 @@
 ﻿var role = require('role');
 
-module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders) {
+module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders,roomName,census) {
     var theCreeps = _.values(Game.creeps);
     var currentHarvesters = [];
     var currentUpgraders = [];
@@ -103,7 +103,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
         }
 
         if (creep.memory.role == 'towerTender') {
-            role.towerTender(creep);
+            role.towerTender(creep,roomName);
         }
 
         if (creep.memory.role == 'spawnTender') {

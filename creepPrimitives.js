@@ -6,6 +6,10 @@
     sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
     currentHighestSource = sources[0];
 
+    //if (sources.length === 0) {
+    //    return -1;
+    //}
+
     for (i = 1; i <= sources.length - 1; i++) {
         if (sources[i].energy > sources[i - 1].energy) {
             currentHighestSource = sources[i];
@@ -66,7 +70,7 @@ module.exports.moveCreep = function moveCreep(creep, range) {
     moveToHere = Game.getObjectById(creep.memory.destination);
     needsToMove = !creep.pos.inRangeTo(moveToHere,range);
     //console.log(range);
-    creep.say(needsToMove);
+    //creep.say(needsToMove);
     if (needsToMove) {
         creep.moveTo(moveToHere);
     }
