@@ -19,7 +19,7 @@ var minBasicCreeps = minHarvesters
                    + minBuilders
                    + minColorGuard;
 var minWallHealth = 100000;
-var minRampartHealth = 3000;
+var minRampartHealth = 1e7;
 var roomsInfo = [];
 
 module.exports.loop = function () {
@@ -41,13 +41,13 @@ module.exports.loop = function () {
 
         hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
 
-        while (hostiles.length > 0) {
+        if (hostiles.length > 0) {
             behaviorTower.defendRoom(roomName, hostiles);
+        } else {
+            behaviorTower.repairRamparts(roomName, minRampartHealth);
+            behaviorTower.repairWalls(roomName, 0.25, minWallHealth);
+            behaviorTower.maintainRoads(roomName, 0.75);
         }
-
-        behaviorTower.repairRamparts(roomName,minRampartHealth);
-        behaviorTower.repairWalls(roomName,0.25,minWallHealth);
-        behaviorTower.maintainRoads(roomName,0.75);
     }
 
     //bookkeeping.honorTheDead();

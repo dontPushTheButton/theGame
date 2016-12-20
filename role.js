@@ -17,6 +17,8 @@ module.exports.harvester = function harvester(creep) {
     //}
     if (!creep.room.storage || creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
         bestDropoffID = creepPrimitives.findBestDropoff(creep);
+    } else if (creep.room.energyAvailable === creep.room.energyCapacityAvailable) {
+        bestDropoffID = creep.memory.destination;
     } else {
         bestDropoffID = creep.room.storage.id;
     }
@@ -68,16 +70,21 @@ module.exports.upgrader = function upgrader(creep) {
         ,needsToMove
         ,moveToHere
         ,bestSourceID;
-    if (creep.room.storage) {
-        hasStorage = 'true';
-    } else {
-        hasStorage = 'false';
-    }
+    //if (creep.room.storage) {
+    //    hasStorage = 'true';
+    //} else {
+    //    hasStorage = 'false';
+    //}
     //console.log(hasStorage);
-    bestSourceID = creepPrimitives.findBestSource(creep);
-    if (bestSourceID === -1) {
-        return -1;
+    if (creep.room.storage) {
+        bestSourceID = creep.room.storage.id;
+    } else {
+        bestSourceID = creepPrimitives.findBestSource(creep);
+        if (bestSourceID === -1) {
+            return -1;
+        }
     }
+
     //sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
 
     if ((creep.memory.upgrading && creep.carry.energy == 0) || !creep.memory.hasOwnProperty('upgrading')) {
@@ -100,11 +107,15 @@ module.exports.upgrader = function upgrader(creep) {
     //    creep.say(needsToMove);
 
     if (!needsToMove) {
-         if (creep.memory.upgrading) {
-        creep.upgradeController(Game.getObjectById(creep.memory.destination));
-         } else if (!creep.memory.upgrading) {
-             creep.harvest(moveToHere);
-         }
+        if (creep.memory.upgrading) {
+            creep.upgradeController(Game.getObjectById(creep.memory.destination));
+        } else if (!creep.memory.upgrading) {
+            if (hasStorage) {
+                creep.withdraw(moveToHere, RESOURCE_ENERGY);
+            } else {
+                creep.harvest(moveToHere);
+            }
+        }
     }
 }
 
@@ -155,7 +166,7 @@ module.exports.towerTender = function towerTender(creep,roomName) {
     if (creep.memory.tending) {
         var towers = Game.rooms[roomName].find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_TOWER)
+                return (structure.structureType == STRUCTURE_TOWER && structure.energy/structure.energyCapacity < .95)
             }
         });
         if (towers.length > 0) {
@@ -183,7 +194,7 @@ module.exports.spawnTender = function spawnTender(creep) {
     storage = creep.room.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType == STRUCTURE_STORAGE); } });
     sources = creep.room.find(FIND_SOURCES, { filter: (source) => { return source.energy > 0; } });
 
-    console.log(JSON.stringify(storage));
+    //console.log(JSON.stringify(storage));
 
     if (targets.length > 0) {
         if (targets.length > 1) {
@@ -263,6 +274,7 @@ module.exports.spawnTender = function spawnTender(creep) {
 
 module.exports.colorGuard = function colorGuard(creep, station) {
     creep.moveTo(Game.flags[station]);
+
 
 }
 

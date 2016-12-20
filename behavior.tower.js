@@ -1,4 +1,6 @@
-﻿module.exports.defendRoom = function defendRoom(roomName, hostiles) {
+﻿var creepPrimitives = require('creepPrimitives');
+
+module.exports.defendRoom = function defendRoom(roomName, hostiles) {
 
     if (hostiles.length > 0) {
         var username = hostiles[0].owner.username;
@@ -41,11 +43,16 @@ module.exports.maintainRoads = function maintainRoads(roomName, minPercentTowerE
 
 module.exports.repairRamparts = function repairRamparts(roomName, minRampartHealth) {
     var ramparts = Game.rooms[roomName].find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_RAMPART } });
-
-    for (i = 0; i < ramparts.length; i++) {
-        if (ramparts[i].hits < minRampartHealth) {
+    //console.log(JSON.stringify(ramparts));
+    //var orderedRamparts = creepPrimitives.sortObjects(ramparts, 'hits', 'ASC');
+    //console.log(JSON.stringify(orderedRamparts));
+    ramparts.sort(creepPrimitives.compareObjectProperties('hits','ASC'));
+        //for (i = 0; i < orderedRamparts.length; i++) {
+        if (ramparts.length > 0) {
             var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_TOWER } });
-            towers.forEach(tower => tower.repair(ramparts[i]));
+            towers.forEach(tower => tower.repair(ramparts[0]));
+    //    }
+        } else {
+            return;
         }
-    }
 }

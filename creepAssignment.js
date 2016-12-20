@@ -42,18 +42,19 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
     //console.log('Attackers: ' + currentAttackers.length);
     //console.log('Scavvers: ' + currentScavvers.length);
 
-    if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
-        lastHarvester = currentHarvesters.pop();
-        currentSpawnTenders.push(lastHarvester);
-        changeRole(lastHarvester, 'spawnTender');
-    } else if (currentHarvesters.length > minHarvesters && currentUpgraders.length < minUpgraders) {
+    //if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
+    //    lastHarvester = currentHarvesters.pop();
+    //    currentSpawnTenders.push(lastHarvester);
+    //    changeRole(lastHarvester, 'spawnTender');
+    //} else 
+    if (currentHarvesters.length > minHarvesters && currentUpgraders.length < minUpgraders) {
         lastHarvester = currentHarvesters.pop();
         currentUpgraders.push(lastHarvester);
         changeRole(lastHarvester, 'upgrader');
-    } else if (currentHarvesters.length > minHarvesters && currentTowerTenders.length < minTowerTenders) {
-        Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'towerTender';
-    } else if (currentHarvesters.length > minHarvesters && currentSpawnTenders.length < minSpawnTenders) {
-        Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'spawnTender';
+    //} else if (currentHarvesters.length > minHarvesters && currentTowerTenders.length < minTowerTenders) {
+    //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'towerTender';
+    //} else if (currentHarvesters.length > minHarvesters && currentSpawnTenders.length < minSpawnTenders) {
+    //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'spawnTender';
     } else if (currentHarvesters.length > minHarvesters && currentBuilders.length < minBuilders && currentConstruction.length > 0) {
         Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'builder';
     }
