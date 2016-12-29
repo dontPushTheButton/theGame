@@ -1,6 +1,6 @@
 ﻿var role = require('role');
 
-module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders,roomName,census) {
+module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders, roomName, census) {
     var theCreeps = _.values(Game.creeps);
     var currentHarvesters = [];
     var currentUpgraders = [];
@@ -33,15 +33,15 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
     }
 
     //    console.log(currentHarvesters);
-
-    //console.log('Harvesters: ' + currentHarvesters.length);
-    //console.log('Upgraders: ' + currentUpgraders.length);
-    //console.log('Tower Tenders: ' + currentTowerTenders.length);
-    //console.log('Spawn Tenders: ' + currentSpawnTenders.length);
-    //console.log('Builders: ' + currentBuilders.length);
-    //console.log('Attackers: ' + currentAttackers.length);
-    //console.log('Scavvers: ' + currentScavvers.length);
-
+    if (false) {
+        console.log('Harvesters: ' + currentHarvesters.length);
+        console.log('Upgraders: ' + currentUpgraders.length);
+        console.log('Tower Tenders: ' + currentTowerTenders.length);
+        //console.log('Spawn Tenders: ' + currentSpawnTenders.length);
+        console.log('Builders: ' + currentBuilders.length);
+        //console.log('Attackers: ' + currentAttackers.length);
+        //console.log('Scavvers: ' + currentScavvers.length);
+    }
     //if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
     //    lastHarvester = currentHarvesters.pop();
     //    currentSpawnTenders.push(lastHarvester);
@@ -51,12 +51,15 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
         lastHarvester = currentHarvesters.pop();
         currentUpgraders.push(lastHarvester);
         changeRole(lastHarvester, 'upgrader');
-    //} else if (currentHarvesters.length > minHarvesters && currentTowerTenders.length < minTowerTenders) {
-    //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'towerTender';
-    //} else if (currentHarvesters.length > minHarvesters && currentSpawnTenders.length < minSpawnTenders) {
-    //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'spawnTender';
+        //} else if (currentHarvesters.length > minHarvesters && currentTowerTenders.length < minTowerTenders) {
+        //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'towerTender';
+        //} else if (currentHarvesters.length > minHarvesters && currentSpawnTenders.length < minSpawnTenders) {
+        //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'spawnTender';
     } else if (currentHarvesters.length > minHarvesters && currentBuilders.length < minBuilders && currentConstruction.length > 0) {
+        console.log("bleep");
         Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'builder';
+        delete Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.destination;
+        delete Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.offloading;
     }
 
     //if (currentHarvesters.length >= minHarvesters && currentAttackers.length < 2) {
@@ -104,7 +107,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerT
         }
 
         if (creep.memory.role == 'towerTender') {
-            role.towerTender(creep,roomName);
+            role.towerTender(creep, roomName);
         }
 
         if (creep.memory.role == 'spawnTender') {

@@ -1,7 +1,8 @@
-﻿
+﻿var creepPrimitives = require('creepPrimitives');
+
 module.exports = {
-    spawnAllCreeps: function (minBasicCreeps,roomName,census) {
-        this.spawnMyBasicCreeps(minBasicCreeps,roomName,census);
+    spawnAllCreeps: function (minBasicCreeps, roomName, census) {
+        this.spawnMyBasicCreeps(minBasicCreeps, roomName, census);
         this.spawnTowerTenders(roomName, census);
         //this.spawnColorguard(roomName);
     },
@@ -27,12 +28,22 @@ module.exports = {
         //console.log(spawn.id);
         //console.log(JSON.stringify(creepsInTheRoom));
         //console.log(JSON.stringify(spawn));
-        
+
+        var noHarvesters = true;
+
+        if (census.propertyIsEnumerable(roomName)) {
+            if (census[roomName].propertyIsEnumerable("harvester")) {
+                noHarvesters = false;
+            }
+        }
+
+
+
         if (creepsInTheRoom < minBasicCreeps) {
             result = spawn.canCreateCreep(modifiedBody, null);
             //console.log(JSON.stringify(census[roomName]['harvester']));
             //console.log(JSON.stringify(Game.rooms[roomName]));
-            if (!census[roomName]['harvester'] || Game.rooms[roomName].energyAvailable === Game.rooms[roomName].energyCapacityAvailable) {
+            if (noHarvesters || Game.rooms[roomName].energyAvailable === Game.rooms[roomName].energyCapacityAvailable) {
                 for (j = 1; j < basicCreep.length; j++) {
                     if (result === -6 && modifiedBody.length > 3) {
                         modifiedBody = modifiedBody.slice(0, modifiedBody.length - 1);
@@ -47,19 +58,19 @@ module.exports = {
                 result = spawn.createCreep(modifiedBody, null, { role: 'harvester' });
                 console.log(result + ' is one of us.');
             } else if (result === -6) {
-                console.log('We have not the energy for even the simplest creep in room ' + roomName + '.')
+                console.log('We are waiting for energy to build the best creep ' + roomName + '.')
             } else if (result !== -4) {
                 console.log('There was an error: ' + result);
             }
         }
     },
 
-    spawnTowerTenders: function (roomName,census) {
-        var towersInTheRoom = _.values(Game.rooms[roomName].find(FIND_MY_STRUCTURES, {filter: (structure) => {return (structure.structureType === STRUCTURE_TOWER)} }));
-        var towerTenderBuild = [MOVE, CARRY, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK];
+    spawnTowerTenders: function (roomName, census) {
+        var towersInTheRoom = _.values(Game.rooms[roomName].find(FIND_MY_STRUCTURES, { filter: (structure) => { return (structure.structureType === STRUCTURE_TOWER) } }));
+        var towerTenderBuild = [MOVE, CARRY];
         var desiredNumTowerTenders
-            ,actualNumTowerTenders
-            ,spawn;
+            , actualNumTowerTenders
+            , spawn;
 
         desiredNumTowerTenders = Math.ceil(towersInTheRoom.length / 3.0);
         spawn = Game.rooms[roomName].find(FIND_MY_SPAWNS)[0];
@@ -72,31 +83,34 @@ module.exports = {
             return -2;
         }
 
-        if (!census[roomName].propertyIsEnumerable(["towerTender"])) {
+        if (!census[roomName].propertyIsEnumerable("towerTender")) {
             actualNumTowerTenders = 0;
         } else {
-            actualNumTowerTenders = Game.rooms[roomName].find(FIND_MY_CREEPS, { filter: (creep) => { return (creep.memory.role === 'towerTender' && creep.ticksToLive > 150) } }).length;
+            actualNumTowerTenders = Game.rooms[roomName].find(FIND_MY_CREEPS, { filter: (creep) => { return (creep.memory.role === 'towerTender' ) } }).length;
+            //console.log(JSON.stringify(!!spawn.spawning));
             //console.log(actualNumTowerTenders.length);
             //actualNumTowerTenders = census[roomName]["towerTender"].length;
         }
-
+        //console.log('TT actual: ' + actualNumTowerTenders + ' TT desired: ' + desiredNumTowerTenders);
+        //console.log(JSON.stringify(spawn.spawning));
         if (actualNumTowerTenders < desiredNumTowerTenders) {
-            result = spawn.canCreateCreep(towerTenderBuild, null);
-            if (result === 0 && spawn.spawning === null) {
-                result = spawn.createCreep(towerTenderBuild, null, { role: 'towerTender' });
-                console.log(result + ' is one of us.');
-            } else if (result === -6) {
-                console.log('We have not the energy for a Tower Tender in room ' + roomName + '.')
-            } else if (result !== -4) {
-                console.log('There was an error: ' + result);
-            }
+            result = creepPrimitives.spawnCreep(roomName, spawn, towerTenderBuild, { role: 'towerTender' }, 'We need energy to create a tower tender in room ' + roomName + '.');
+            //spawn.canCreateCreep(towerTenderBuild, null);
+            //if (result === 0 && spawn.spawning === null) {
+            //    result = spawn.createCreep(towerTenderBuild, null, { role: 'towerTender' });
+            //    console.log(result + ' is one of us.');
+            //} else if (result === -6) {
+            //    console.log('We have not the energy for a Tower Tender in room ' + roomName + '.')
+            //} else if (result !== -4) {
+            //    console.log('There was an error: ' + result);
+            //}
 
         }
         //console.log(actualNumTowerTenders);
 
-       
+
         //actualNumTowerTenders = census.role['towerTender'].members.length;
-        
+
     },
 
     spawnColorguard: function (roomName) {
@@ -106,7 +120,7 @@ module.exports = {
             , spawn;
         spawn = Game.rooms[roomName].find(FIND_MY_SPAWNS)[0];
         desiredNumColorguard = [Game.flags].length;//.length;
-        actualNumColorGuard =  _(Game.creeps).filter({ memory: { role: 'color' } });
+        actualNumColorGuard = _(Game.creeps).filter({ memory: { role: 'color' } });
         console.log(JSON.stringify(desiredNumColorguard));
         console.log(JSON.stringify(actualNumColorGuard.length));
 

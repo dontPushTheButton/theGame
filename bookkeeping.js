@@ -35,7 +35,7 @@
         var memberInfo;
 
         if (allCreeps.length === 0) {
-            return -1;
+            return census;
         }
 
         for (i = 0; i < allCreeps.length; i++) {
