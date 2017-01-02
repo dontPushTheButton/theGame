@@ -813,134 +813,134 @@ const RESOURCE_CATALYZED_GHODIUM_ALKALIDE = "XGHO2";
  */
 const REACTIONS = {
     H: {
-        O: "OH",
-        L: "LH",
-        K: "KH",
-        U: "UH",
-        Z: "ZH",
-        G: "GH"
+	   O: "OH",
+	   L: "LH",
+	   K: "KH",
+	   U: "UH",
+	   Z: "ZH",
+	   G: "GH"
     },
     O: {
-        H: "OH",
-        L: "LO",
-        K: "KO",
-        U: "UO",
-        Z: "ZO",
-        G: "GO"
+	   H: "OH",
+	   L: "LO",
+	   K: "KO",
+	   U: "UO",
+	   Z: "ZO",
+	   G: "GO"
     },
     Z: {
-        K: "ZK",
-        H: "ZH",
-        O: "ZO"
+	   K: "ZK",
+	   H: "ZH",
+	   O: "ZO"
     },
     L: {
-        U: "UL",
-        H: "LH",
-        O: "LO"
+	   U: "UL",
+	   H: "LH",
+	   O: "LO"
     },
     K: {
-        Z: "ZK",
-        H: "KH",
-        O: "KO"
+	   Z: "ZK",
+	   H: "KH",
+	   O: "KO"
     },
     G: {
-        H: "GH",
-        O: "GO"
+	   H: "GH",
+	   O: "GO"
     },
     U: {
-        L: "UL",
-        H: "UH",
-        O: "UO"
+	   L: "UL",
+	   H: "UH",
+	   O: "UO"
     },
     OH: {
-        UH: "UH2O",
-        UO: "UHO2",
-        ZH: "ZH2O",
-        ZO: "ZHO2",
-        KH: "KH2O",
-        KO: "KHO2",
-        LH: "LH2O",
-        LO: "LHO2",
-        GH: "GH2O",
-        GO: "GHO2"
+	   UH: "UH2O",
+	   UO: "UHO2",
+	   ZH: "ZH2O",
+	   ZO: "ZHO2",
+	   KH: "KH2O",
+	   KO: "KHO2",
+	   LH: "LH2O",
+	   LO: "LHO2",
+	   GH: "GH2O",
+	   GO: "GHO2"
     },
     X: {
-        UH2O: "XUH2O",
-        UHO2: "XUHO2",
-        LH2O: "XLH2O",
-        LHO2: "XLHO2",
-        KH2O: "XKH2O",
-        KHO2: "XKHO2",
-        ZH2O: "XZH2O",
-        ZHO2: "XZHO2",
-        GH2O: "XGH2O",
-        GHO2: "XGHO2"
+	   UH2O: "XUH2O",
+	   UHO2: "XUHO2",
+	   LH2O: "XLH2O",
+	   LHO2: "XLHO2",
+	   KH2O: "XKH2O",
+	   KHO2: "XKHO2",
+	   ZH2O: "XZH2O",
+	   ZHO2: "XZHO2",
+	   GH2O: "XGH2O",
+	   GHO2: "XGHO2"
     },
     ZK: {
-        UL: "G"
+	   UL: "G"
     },
     UL: {
-        ZK: "G"
+	   ZK: "G"
     },
     LH: {
-        OH: "LH2O"
+	   OH: "LH2O"
     },
     ZH: {
-        OH: "ZH2O"
+	   OH: "ZH2O"
     },
     GH: {
-        OH: "GH2O"
+	   OH: "GH2O"
     },
     KH: {
-        OH: "KH2O"
+	   OH: "KH2O"
     },
     UH: {
-        OH: "UH2O"
+	   OH: "UH2O"
     },
     LO: {
-        OH: "LHO2"
+	   OH: "LHO2"
     },
     ZO: {
-        OH: "ZHO2"
+	   OH: "ZHO2"
     },
     KO: {
-        OH: "KHO2"
+	   OH: "KHO2"
     },
     UO: {
-        OH: "UHO2"
+	   OH: "UHO2"
     },
     GO: {
-        OH: "GHO2"
+	   OH: "GHO2"
     },
     LH2O: {
-        X: "XLH2O"
+	   X: "XLH2O"
     },
     KH2O: {
-        X: "XKH2O"
+	   X: "XKH2O"
     },
     ZH2O: {
-        X: "XZH2O"
+	   X: "XZH2O"
     },
     UH2O: {
-        X: "XUH2O"
+	   X: "XUH2O"
     },
     GH2O: {
-        X: "XGH2O"
+	   X: "XGH2O"
     },
     LHO2: {
-        X: "XLHO2"
+	   X: "XLHO2"
     },
     UHO2: {
-        X: "XUHO2"
+	   X: "XUHO2"
     },
     KHO2: {
-        X: "XKHO2"
+	   X: "XKHO2"
     },
     ZHO2: {
-        X: "XZHO2"
+	   X: "XZHO2"
     },
     GHO2: {
-        X: "XGHO2"
+	   X: "XGHO2"
     }
 };
 
@@ -950,117 +950,117 @@ const REACTIONS = {
  */
 const BOOSTS = {
     work: {
-        UO: {
-            harvest: 2
-        },
-        UHO2: {
-            harvest: 3
-        },
-        XUHO2: {
-            harvest: 4
-        },
-        LH: {
-            build: 1.3,
-            repair: 1.3
-        },
-        LH2O: {
-            build: 1.65,
-            repair: 1.65
-        },
-        XLH2O: {
-            build: 2,
-            repair: 2
-        },
-        ZH: {
-            dismantle: 2
-        },
-        ZH2O: {
-            dismantle: 3
-        },
-        XZH2O: {
-            dismantle: 4
-        },
-        GH: {
-            upgradeController: 1.3
-        },
-        GH2O: {
-            upgradeController: 1.65
-        },
-        XGH2O: {
-            upgradeController: 2
-        }
+	   UO: {
+		  harvest: 2
+	   },
+	   UHO2: {
+		  harvest: 3
+	   },
+	   XUHO2: {
+		  harvest: 4
+	   },
+	   LH: {
+		  build: 1.3,
+		  repair: 1.3
+	   },
+	   LH2O: {
+		  build: 1.65,
+		  repair: 1.65
+	   },
+	   XLH2O: {
+		  build: 2,
+		  repair: 2
+	   },
+	   ZH: {
+		  dismantle: 2
+	   },
+	   ZH2O: {
+		  dismantle: 3
+	   },
+	   XZH2O: {
+		  dismantle: 4
+	   },
+	   GH: {
+		  upgradeController: 1.3
+	   },
+	   GH2O: {
+		  upgradeController: 1.65
+	   },
+	   XGH2O: {
+		  upgradeController: 2
+	   }
     },
     attack: {
-        UH: {
-            attack: 2
-        },
-        UH2O: {
-            attack: 3
-        },
-        XUH2O: {
-            attack: 4
-        }
+	   UH: {
+		  attack: 2
+	   },
+	   UH2O: {
+		  attack: 3
+	   },
+	   XUH2O: {
+		  attack: 4
+	   }
     },
     ranged_attack: {
-        KO: {
-            rangedAttack: 2,
-            rangedMassAttack: 2
-        },
-        KHO2: {
-            rangedAttack: 3,
-            rangedMassAttack: 3
-        },
-        XKHO2: {
-            rangedAttack: 4,
-            rangedMassAttack: 4
-        }
+	   KO: {
+		  rangedAttack: 2,
+		  rangedMassAttack: 2
+	   },
+	   KHO2: {
+		  rangedAttack: 3,
+		  rangedMassAttack: 3
+	   },
+	   XKHO2: {
+		  rangedAttack: 4,
+		  rangedMassAttack: 4
+	   }
     },
     heal: {
-        LO: {
-            heal: 2,
-            rangedHeal: 2
-        },
-        LHO2: {
-            heal: 3,
-            rangedHeal: 3
-        },
-        XLHO2: {
-            heal: 4,
-            rangedHeal: 4
-        }
+	   LO: {
+		  heal: 2,
+		  rangedHeal: 2
+	   },
+	   LHO2: {
+		  heal: 3,
+		  rangedHeal: 3
+	   },
+	   XLHO2: {
+		  heal: 4,
+		  rangedHeal: 4
+	   }
     },
     carry: {
-        KH: {
-            capacity: 2
-        },
-        KH2O: {
-            capacity: 3
-        },
-        XKH2O: {
-            capacity: 4
-        }
+	   KH: {
+		  capacity: 2
+	   },
+	   KH2O: {
+		  capacity: 3
+	   },
+	   XKH2O: {
+		  capacity: 4
+	   }
     },
     move: {
-        ZO: {
-            fatigue: 2
-        },
-        ZHO2: {
-            fatigue: 3
-        },
-        XZHO2: {
-            fatigue: 4
-        }
+	   ZO: {
+		  fatigue: 2
+	   },
+	   ZHO2: {
+		  fatigue: 3
+	   },
+	   XZHO2: {
+		  fatigue: 4
+	   }
     },
     tough: {
-        GO: {
-            damage: .7
-        },
-        GHO2: {
-            damage: .5
-        },
-        XGHO2: {
-            damage: .3
-        }
+	   GO: {
+		  damage: .7
+	   },
+	   GHO2: {
+		  damage: .5
+	   },
+	   XGHO2: {
+		  damage: .3
+	   }
     }
 };
 
@@ -1151,14 +1151,14 @@ const COLORS_ALL = [
  * @type {object}
  */
 const BODYPART_COST = {
-    move:           50,
-    work:          100,
-    attack:         80,
-    carry:          50,
-    heal:          250,
+    move:		 50,
+    work:		100,
+    attack:	    80,
+    carry:		50,
+    heal:		250,
     ranged_attack: 150,
-    tough:          10,
-    claim:         600
+    tough:		10,
+    claim:	    600
 };
 
 /**

@@ -13,11 +13,11 @@ StructureKeeperLair = function() { };
 StructureKeeperLair.prototype =
 {
     /**
-     * Time to spawning of the next Source Keeper.
-     *
-     * @see {@link http://support.screeps.com/hc/en-us/articles/207712119-StructureKeeperLair#ticksToSpawn}
-     *
-     * @type {number}
-     */
+	* Time to spawning of the next Source Keeper.
+	*
+	* @see {@link http://support.screeps.com/hc/en-us/articles/207712119-StructureKeeperLair#ticksToSpawn}
+	*
+	* @type {number}
+	*/
     ticksToSpawn: 0
 };

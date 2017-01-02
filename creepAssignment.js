@@ -1,134 +1,137 @@
-﻿var role = require('role');
+﻿var role = require('role'),
+    creepPrimitives = require('creepPrimitives')
+spawnMyCreeps = require('spawnMyCreeps');
 
-module.exports = function creepAssignment(minHarvesters, minUpgraders, minTowerTenders, minSpawnTenders, minBuilders, roomName, census) {
-    var theCreeps = _.values(Game.creeps);
-    var currentHarvesters = [];
-    var currentUpgraders = [];
-    var currentTowerTenders = [];
-    var currentSpawnTenders = [];
-    var currentBuilders = [];
-    var currentAttackers = [];
-    var currentScavvers = [];
-    var currentConstruction = _.values(Game.constructionSites);
+module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilders, roomName, census, constructionByRoom) {
+	var localCreepCount = {},
+	   creepToChange,
+	   basicCreepCount = 0,
+	   basicTypes = ['harvester',
+				  'upgrader',
+				  'builder'],
+	   minBasicCreepCount = minHarvesters + minUpgraders;
 
-    for (var name in Game.creeps) {
+	if (!localCreepCount.propertyIsEnumerable('builder')) {
+		localCreepCount.builder = 0;
+	}
 
-        //        Game.creeps[name].say(Game.creeps[name].body.length);
-        if (Game.creeps[name].memory.role == 'harvester') {
-            currentHarvesters.push(name);
-        } else if (Game.creeps[name].memory.role == 'upgrader') {
-            currentUpgraders.push(Game.creeps[name]);
-        } else if (Game.creeps[name].memory.role == 'builder') {
-            currentBuilders.push(Game.creeps[name]);
-        } else if (Game.creeps[name].memory.role == 'towerTender') {
-            currentTowerTenders.push(Game.creeps[name]);
-        } else if (Game.creeps[name].memory.role == 'spawnTender') {
-            currentSpawnTenders.push(Game.creeps[name]);
-        } else if (Game.creeps[name].memory.role == 'attacker') {
-            currentAttackers.push(Game.creeps[name]);
-        } else if (Game.creeps[name].memory.role == 'scavver') {
-            currentScavvers.push(Game.creeps[name]);
-        }
-        //console.log(Game.creeps[name].body.length);
-    }
-
-    //    console.log(currentHarvesters);
-    if (false) {
-        console.log('Harvesters: ' + currentHarvesters.length);
-        console.log('Upgraders: ' + currentUpgraders.length);
-        console.log('Tower Tenders: ' + currentTowerTenders.length);
-        //console.log('Spawn Tenders: ' + currentSpawnTenders.length);
-        console.log('Builders: ' + currentBuilders.length);
-        //console.log('Attackers: ' + currentAttackers.length);
-        //console.log('Scavvers: ' + currentScavvers.length);
-    }
-    //if (currentSpawnTenders < minSpawnTenders && currentHarvesters.length > 1 /* && */) {
-    //    lastHarvester = currentHarvesters.pop();
-    //    currentSpawnTenders.push(lastHarvester);
-    //    changeRole(lastHarvester, 'spawnTender');
-    //} else 
-    if (currentHarvesters.length > minHarvesters && currentUpgraders.length < minUpgraders) {
-        lastHarvester = currentHarvesters.pop();
-        currentUpgraders.push(lastHarvester);
-        changeRole(lastHarvester, 'upgrader');
-        //} else if (currentHarvesters.length > minHarvesters && currentTowerTenders.length < minTowerTenders) {
-        //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'towerTender';
-        //} else if (currentHarvesters.length > minHarvesters && currentSpawnTenders.length < minSpawnTenders) {
-        //    Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'spawnTender';
-    } else if (currentHarvesters.length > minHarvesters && currentBuilders.length < minBuilders && currentConstruction.length > 0) {
-        console.log("bleep");
-        Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.role = 'builder';
-        delete Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.destination;
-        delete Game.creeps[currentHarvesters[currentHarvesters.length - 1]].memory.offloading;
-    }
-
-    //if (currentHarvesters.length >= minHarvesters && currentAttackers.length < 2) {
-    //    var result = Game.spawns.Spawn1.createCreep([MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK], undefined, { role: 'attacker' });
-    //}
-    if (currentHarvesters.length >= minHarvesters && currentScavvers.length < 1 && null) {
-        var homeRoom = Game.spawns.Spawn1.pos.roomName;
-        //var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
-        //                                           , undefined
-        //                                           , {
-        //                                               role: 'scavver'
-        //                                            , home: homeRoom
-        //                                            , offloading: false
-        //                                            , destFlag: 'Flag2'
-        //                                           });
-    } else if (currentHarvesters.length >= minHarvesters && (currentScavvers.length == 1 && currentScavvers.length < 2)) {
-        var homeRoom = Game.spawns.Spawn1.pos.roomName;
-        //var result = Game.spawns.Spawn1.createCreep([MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY]
-        //                                           , undefined
-        //                                           , {
-        //                                               role: 'scavver'
-        //                                            , home: homeRoom
-        //                                            , offloading: false
-        //                                            , destFlag: 'Flag3'
-        //                                           });
-    }
+	if (!localCreepCount.propertyIsEnumerable('upgrader')) {
+		localCreepCount.upgrader = 0;
+	}
 
 
 
-    for (var name in Game.creeps) {
-        //        test = Game.creeps[name].body.length;
-        //        console.log(name + ' has ' + test + ' body parts');
+	console.log('minBasicCreepCount: ' + minBasicCreepCount);
 
-        var creep = Game.creeps[name];
-        if (creep.memory.role == 'harvester') {
-            role.harvester(creep);
-        }
 
-        if (creep.memory.role == 'builder') {
-            role.builder(creep);
-        }
 
-        if (creep.memory.role == 'upgrader') {
-            role.upgrader(creep);
-        }
+	_.forEach(census[roomName], function (n, key) {
+		localCreepCount[key] = n.length;
+		//console.log(basicTypes);
+		//console.log(key);
+		//console.log(_.includes(basicTypes, key))
+		if (_.includes(basicTypes, key)) {
+			basicCreepCount = basicCreepCount + n.length;
+		}
+		if (true) {
+			console.log(roomName + ' ' + key + ' count: ' + n.length);
+		}
+	});
 
-        if (creep.memory.role == 'towerTender') {
-            role.towerTender(creep, roomName);
-        }
 
-        if (creep.memory.role == 'spawnTender') {
-            role.spawnTender(creep);
-        }
+	if (constructionByRoom.propertyIsEnumerable(roomName)) {
+		minBasicCreepCount = minBasicCreepCount + minBuilders;
+		console.log('minBasicCreepCount: ' + minBasicCreepCount);
+		if (Game.rooms[roomName].controller.my) {
+			spawnMyCreeps.spawnAllCreeps(minBasicCreepCount, basicCreepCount, roomName, census);
+		}
 
-        if (creep.memory.role == 'attacker') {
-            role.attacker(creep, 'Flag1');
-        }
+		try {
+			if (localCreepCount.harvester > minHarvesters) {
+				//console.log('Too many harvesters.');
+				creepToChange = Game.getObjectById(census[roomName].harvester[0]);
+			} else if (localCreepCount.upgrader > minUpgraders) {
+				creepToChange = Game.getObjectById(census[roomName].upgrader[0]);
+			}
 
-        if (creep.memory.role == 'scavver') {
-            role.scavver(creep, creep.memory.destFlag);
-        }
+			if (localCreepCount.builder < minBuilders) {
+				creepPrimitives.changeRole(creepToChange, {
+					role: 'builder',
+				});
+				creep.memory.destination = creepPrimitives.findBestSource(creep, true);
+			}
+		}
+		catch (err) {
 
-        if (creep.memory.role == 'colorGuard') {
-            role.colorGuard(creep, 'Flag1');
-        }
-    }
+		}
 
-    function changeRole(creep, newRole) {
-        Game.creeps[creep].memory.role = newRole;
-    }
+
+	} else {
+		if (Game.rooms[roomName].controller.my) {
+			spawnMyCreeps.spawnAllCreeps(minBasicCreepCount, basicCreepCount, roomName, census);
+		}
+		minBuilders = 0;
+	}
+	if (localCreepCount.builder > minBuilders) {
+		creepToChange = Game.getObjectById(census[roomName].builder[0]);
+		creepPrimitives.changeRole(creepToChange,
+			 {
+			 	role: 'upgrader',
+			 });
+		creep.memory.destination = creepPrimitives.findBestSource(creep, true);
+	}
+	if (localCreepCount.harvester > minHarvesters && localCreepCount.upgrader < minUpgraders) {
+		creepToChange = Game.getObjectById(census[roomName].harvester[0]);
+		creepPrimitives.changeRole(creepToChange,
+			{
+ 				role: 'upgrader',
+			});
+		creep.memory.destination = creepPrimitives.findBestSource(creep, true);
+	}
+
+
+	//console.log('basicCreepCount: ' + basicCreepCount);
+
+
+	if (constructionByRoom.propertyIsEnumerable(roomName)) {
+
+	}
+
+	for (var name in Game.creeps) {
+
+		var creep = Game.creeps[name];
+		//console.log(JSON.stringify(creep));
+		if (creep.memory.role == 'harvester') {
+			role.harvester(creep);
+		}
+
+		if (creep.memory.role == 'builder') {
+			role.builder(creep, constructionByRoom);
+		}
+
+		if (creep.memory.role == 'upgrader') {
+			role.upgrader(creep);
+		}
+
+		if (creep.memory.role == 'towerTender') {
+			role.towerTender(creep, roomName);
+		}
+
+		if (creep.memory.role == 'spawnTender') {
+			role.spawnTender(creep);
+		}
+
+		if (creep.memory.role == 'attacker') {
+			role.attacker(creep, 'Flag1');
+		}
+
+		if (creep.memory.role == 'scavver') {
+			role.scavver(creep, creep.memory.destFlag);
+		}
+
+		if (creep.memory.role == 'colorGuard') {
+			role.colorGuard(creep, 'Flag1');
+		}
+	}
 }
 

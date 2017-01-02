@@ -13,20 +13,20 @@ StructurePowerBank = function() { };
 StructurePowerBank.prototype =
 {
     /**
-     * The amount of power containing.
-     *
-     * @see {@link http://support.screeps.com/hc/en-us/articles/207712729-StructurePowerBank#power}
-     *
-     * @type {number}
-     */
+	* The amount of power containing.
+	*
+	* @see {@link http://support.screeps.com/hc/en-us/articles/207712729-StructurePowerBank#power}
+	*
+	* @type {number}
+	*/
     power: 0,
 
     /**
-     * The amount of game ticks when this structure will disappear.
-     *
-     * @see {@link http://support.screeps.com/hc/en-us/articles/207712729-StructurePowerBank#ticksToDecay}
-     *
-     * @type {number}
-     */
+	* The amount of game ticks when this structure will disappear.
+	*
+	* @see {@link http://support.screeps.com/hc/en-us/articles/207712729-StructurePowerBank#ticksToDecay}
+	*
+	* @type {number}
+	*/
     ticksToDecay: 0
 };

@@ -12,11 +12,11 @@ StructureRoad = function() { };
 StructureRoad.prototype =
 {
     /**
-     * The amount of game ticks when this road will lose some hit points.
-     *
-     * @see {@link http://support.screeps.com/hc/en-us/articles/207713089-StructureRoad#ticksToDecay}
-     *
-     * @type {number}
-     */
+	* The amount of game ticks when this road will lose some hit points.
+	*
+	* @see {@link http://support.screeps.com/hc/en-us/articles/207713089-StructureRoad#ticksToDecay}
+	*
+	* @type {number}
+	*/
     ticksToDecay: 0
 };
