@@ -4,11 +4,12 @@ spawnMyCreeps = require('spawnMyCreeps');
 
 module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilders, roomName, census, constructionByRoom) {
 	var localCreepCount = {},
-	   creepToChange,
-	   basicCreepCount = 0,
-	   basicTypes = ['harvester',
-				  'upgrader',
-				  'builder'],
+		creepToChange,
+		basicCreepCount = 0,
+		basicTypes = ['harvester',
+					'upgrader',
+					'builder'],
+
 	   minBasicCreepCount = minHarvesters + minUpgraders;
 
 	if (!localCreepCount.propertyIsEnumerable('builder')) {
@@ -21,11 +22,11 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 
 
 
-	console.log('minBasicCreepCount: ' + minBasicCreepCount);
+	//console.log('minBasicCreepCount: ' + minBasicCreepCount);
 
 
 
-	_.forEach(census[roomName], function (n, key) {
+	_.forEach(census, function (n, key) {
 		localCreepCount[key] = n.length;
 		//console.log(basicTypes);
 		//console.log(key);
@@ -33,7 +34,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 		if (_.includes(basicTypes, key)) {
 			basicCreepCount = basicCreepCount + n.length;
 		}
-		if (true) {
+		if (false) {
 			console.log(roomName + ' ' + key + ' count: ' + n.length);
 		}
 	});
@@ -41,7 +42,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 
 	if (constructionByRoom.propertyIsEnumerable(roomName)) {
 		minBasicCreepCount = minBasicCreepCount + minBuilders;
-		console.log('minBasicCreepCount: ' + minBasicCreepCount);
+		//console.log('minBasicCreepCount: ' + minBasicCreepCount);
 		if (Game.rooms[roomName].controller.my) {
 			spawnMyCreeps.spawnAllCreeps(minBasicCreepCount, basicCreepCount, roomName, census);
 		}
@@ -49,9 +50,10 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 		try {
 			if (localCreepCount.harvester > minHarvesters) {
 				//console.log('Too many harvesters.');
-				creepToChange = Game.getObjectById(census[roomName].harvester[0]);
-			} else if (localCreepCount.upgrader > minUpgraders) {
-				creepToChange = Game.getObjectById(census[roomName].upgrader[0]);
+				console.log(census.harvester[0]);
+				creepToChange = Game.getObjectById(census.harvester[0]);
+			} else if (localCreepCount.upgrader >= minUpgraders) {
+				creepToChange = Game.getObjectById(census.upgrader[0]);
 			}
 
 			if (localCreepCount.builder < minBuilders) {
@@ -62,7 +64,7 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 			}
 		}
 		catch (err) {
-
+			console.log("failure in Role change")
 		}
 
 
@@ -73,29 +75,29 @@ module.exports = function creepAssignment(minHarvesters, minUpgraders, minBuilde
 		minBuilders = 0;
 	}
 	if (localCreepCount.builder > minBuilders) {
-		creepToChange = Game.getObjectById(census[roomName].builder[0]);
+		creepToChange = Game.getObjectById(census.builder[0]);
 		creepPrimitives.changeRole(creepToChange,
 			 {
 			 	role: 'upgrader',
+			 	basic: true
 			 });
 		creep.memory.destination = creepPrimitives.findBestSource(creep, true);
 	}
 	if (localCreepCount.harvester > minHarvesters && localCreepCount.upgrader < minUpgraders) {
-		creepToChange = Game.getObjectById(census[roomName].harvester[0]);
+		creepToChange = Game.getObjectById(census.harvester[0]);
 		creepPrimitives.changeRole(creepToChange,
 			{
- 				role: 'upgrader',
+				role: 'upgrader',
+				basic: true
 			});
 		creep.memory.destination = creepPrimitives.findBestSource(creep, true);
+
 	}
 
 
 	//console.log('basicCreepCount: ' + basicCreepCount);
 
 
-	if (constructionByRoom.propertyIsEnumerable(roomName)) {
-
-	}
 
 	for (var name in Game.creeps) {
 

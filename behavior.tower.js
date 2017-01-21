@@ -71,19 +71,22 @@ module.exports = {
 	   }
     },
     
-    maintainStructure: function (roomName, buildingType, frequency, offset, minRatio) {
-	   //console.log('maintainStructure() called');
-	   if (!Math.abs((Game.time % frequency) - offset)) {
-		  //console.log('maintainStructure() activated');
-		  var targets;
-		  //console.log(buildingType);
-		  targets = Game.rooms[roomName].find(FIND_STRUCTURES, {
-			 filter: (target) => { 
-				return target.structureType === buildingType && ((target.hits / target.hitsMax) <= minRatio);
+    maintainStructures: function (roomName, frequency, offset, minRatio) {
+		//console.log('maintainStructure() called');
+		if (!Math.abs((Game.time % frequency) - offset)) {
+			//console.log('maintainStructure() activated');
+			var targets;
+			//console.log(buildingType);
+			targets = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
+				filter: (target) => { 
+					return ((target.hits / target.hitsMax) <= minRatio);
 
 			 }
 		  });
-		  targets.sort(creepPrimitives.compareObjectProperties('hits', 'ASC'));
+		targets = _.sortByOrder(targets, function (target) {
+		  	target.hits / target.hitsMax;
+		  });
+			//targets.sort(creepPrimitives.compareObjectProperties('hits', 'ASC'));
 		  //console.log(JSON.stringify(targets));
 		  if (targets.length > 0) {
 			 var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_TOWER } });

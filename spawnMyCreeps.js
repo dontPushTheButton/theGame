@@ -19,7 +19,7 @@ module.exports = {
 	   var spawn,
 		  creepsInTheRoom;
 
-	   console.log(JSON.stringify(roomName));
+	   //console.log(JSON.stringify(roomName));
 
 	   //basicCreepsInTheRoom = Game.rooms[roomName].find(FIND_MY_CREEPS).length;
 	   //console.log(creepsInTheRoom.toString() + ' creeps in room ' + );
@@ -32,17 +32,17 @@ module.exports = {
 
 	   var noHarvesters = true;
 
-	   if (census.propertyIsEnumerable(roomName)) {
-		  if (census[roomName].propertyIsEnumerable("harvester")) {
+	   //if (census.propertyIsEnumerable(roomName)) {
+		  if (census.propertyIsEnumerable("harvester")) {
 			 noHarvesters = false;
 		  }
-	   }
+	  // }
 
 
 
 	   if (basicCreepsInTheRoom < minBasicCreeps) {
 		  result = spawn.canCreateCreep(modifiedBody, null);
-		  //console.log(JSON.stringify(census[roomName]['harvester']));
+		  //console.log(JSON.stringify(census['harvester']));
 		  //console.log(JSON.stringify(Game.rooms[roomName]));
 		  if (noHarvesters || Game.rooms[roomName].energyAvailable === Game.rooms[roomName].energyCapacityAvailable) {
 			 for (j = 1; j < basicCreep.length; j++) {
@@ -76,7 +76,7 @@ module.exports = {
 	   desiredNumTowerTenders = Math.ceil(towersInTheRoom.length / 3.0);
 	   spawn = Game.rooms[roomName].find(FIND_MY_SPAWNS)[0];
 	   //console.log(desiredNumTowerTenders);
-	   //console.log(JSON.stringify(census[roomName].propertyIsEnumerable(["towerTender"])));
+	   //console.log(JSON.stringify(census.propertyIsEnumerable(["towerTender"])));
 
 	   if (towersInTheRoom.length === 0) {
 		  return -1;
@@ -84,13 +84,13 @@ module.exports = {
 		  return -2;
 	   }
 
-	   if (!census[roomName].propertyIsEnumerable("towerTender")) {
+	   if (!census.propertyIsEnumerable("towerTender")) {
 		  actualNumTowerTenders = 0;
 	   } else {
 		  actualNumTowerTenders = Game.rooms[roomName].find(FIND_MY_CREEPS, { filter: (creep) => { return (creep.memory.role === 'towerTender' ) } }).length;
 		  //console.log(JSON.stringify(!!spawn.spawning));
 		  //console.log(actualNumTowerTenders.length);
-		  //actualNumTowerTenders = census[roomName]["towerTender"].length;
+		  //actualNumTowerTenders = census["towerTender"].length;
 	   }
 	   //console.log('TT actual: ' + actualNumTowerTenders + ' TT desired: ' + desiredNumTowerTenders);
 	   //console.log(JSON.stringify(spawn.spawning));
