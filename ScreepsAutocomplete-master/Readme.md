@@ -50,11 +50,11 @@ Integration with Atom is done through use of the [`atom-ternjs`](https://github.
  * Put the following in your `.tern-project` file
 ```json
 {
-  "ecmaVersion": 6,
-  "libs": [],
-  "loadEagerly": [
-    "ScreepsAutocomplete/**/*.js"
-  ]
+"ecmaVersion": 6,
+"libs": [],
+"loadEagerly": [
+"ScreepsAutocomplete/**/*.js"
+]
 }
 ```
  * Restart and Enjoy
