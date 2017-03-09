@@ -1,106 +1,9 @@
-﻿//var _ = require('lodash');
+//var _ = require('lodash');
 
 
 module.exports = {
-	idealPopulation: function () {
-		return {
-			"rcl": {
-				"1": {
-					"creeps": {
-						"worker": {
-							"parts": [],
-							"desiredQty": function (roomName) {
-								var sources,
-									suitableStructures,
-									needed,
-									distance;
-								suitableStructures = [];
-								needed = 0;
-								try {
-									sources = Game.rooms[roomName].find(FIND_SOURCES);
-									if (sources.length > 0) {
-										for (i = 0; i < sources.length; i++) {
-											suitableStructures = Game.rooms[roomName].lookAtArea(sources[i].pos.y - 2, sources[i].pos.x - 2, sources[i].pos.y + 2, sources[i].pos.x + 2, 1);
-											console.log(JSON.stringify(suitableStructures));
-											suitableStructures = _.filter(_.filter(suitableStructures, function (obj) {
-												return obj.type === "structure";
-											}), function (obj) {
-												return obj.structure.structureType === STRUCTURE_CONTAINER || obj.structure.structureType === STRUCTURE_LINK;
-											});
-											//console.log('boop suitableStructures.length: ' + suitableStructures.length);
-											if (suitableStructures.length > 0) {
-												//console.log('needed before: ' + needed);
-												needed++;
-												//console.log('needed after: ' + needed);
-											}
-										}
-									}
-								}
-								catch (e) {
-									console.log('Can\'t detemine the desired number of workers.');
-									//console.log(JSON.stringify(e));
-								} finally {
-									return needed;
-								}
-							},
-						},
-						"trucker": {
-							"parts": [],
-							"desiredQty": function () {
 
-							},
-						},
-						"soldier": {
-
-						},
-						"basic": {
-
-						}
-					},
-					"buildings": {
-						"STRUCTURE_SPAWN": {
-
-						},
-						"STRUCTURE_ROAD": {
-
-						},
-						"STRUCTURE_WALL": {
-
-						},
-						"STRUCTURE_CONTAINER": {
-							"desiredQty": function (roomName) {
-								return Game.rooms[roomName].find(FIND_SOURCES).length + 1; // one for the spawn and each source
-							},
-							"currentQty": function (roomName) {
-								var numberCompleted,
-									numberSlated;
-
-								numberCompleted = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {
-									filter: { structureType: STRUCTURE_CONTAINER }
-								}).length;
-
-								numberSlated = Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES, {
-									filter: { structureType: STRUCTURE_CONTAINER }
-								}).length;
-
-								return numberCompleted + numberSlated;
-							},
-							"findLocations": {
-
-							},
-							"placeConstructionSites": function (roomName) {
-								if (this.desiredQty(roomName) - this.currentQty(roomName)) {
-									console.log("You must place more containers.");
-								}
-							},
-						},
-					}
-				}
-			}
-		}
-	},
-
-	findBestSource: function (creep, pullsFromStorage) {
+	findBestSource (creep, pullsFromStorage) {
 		var sources,
 			currentHighestSource,
 			bestSourceID;
@@ -122,7 +25,7 @@ module.exports = {
 
 		if (sources.length === 0) {
 			creep.say('no sources');
-			return creep.memory.destination;
+			return creep.realMemory.destination;
 		} else {
 			currentHighestSource = sources[0];
 		}
@@ -155,7 +58,7 @@ module.exports = {
 			}
 		});
 		//dropoffs.sort(this.compareObjectProperties("energyCapacity", "ASC"));
-		storage = creep.room.find(FIND_STRUCTURES, { filter: (structure) => { return (structure.structureType === STRUCTURE_STORAGE); } });
+		storage = creep.room.find(FIND_STRUCTURES, { filter: (structure) => { return structure.structureType === STRUCTURE_STORAGE; } });
 		//console.log(JSON.stringify(storage));
 		//console.log(JSON.stringify(dropoffs));
 
@@ -167,7 +70,7 @@ module.exports = {
 			return creep.pos.findClosestByPath(dropoffs).id;
 		} else if (dropoffs.length === 0) {
 			dropoffs.push(storage[0]);
-		}		 //if (dropoffs.length > 1) {
+		}			//if (dropoffs.length > 1) {
 
 		return dropoffs[0].id;
 	},
@@ -178,10 +81,12 @@ module.exports = {
 			bestProjectsID;
 
 		projects = _.sortByOrder(creep.room.find(FIND_CONSTRUCTION_SITES),
-			['progressTotal',
+			[
+				'progressTotal',
 				function (o) {
 					return o.progress / o.progressTotal;
-				}],
+				}
+			],
 			['asc', 'desc']);
 		//console.log(JSON.stringify(projects));
 
@@ -190,6 +95,8 @@ module.exports = {
 				bestProjectsID = projects[0].id; //creep.pos.findClosestByPath(projects).id;
 			} else if (projects.length === 1) {
 				bestProjectsID = projects[0].id;
+			} else {
+				//test
 			}
 		}
 
@@ -197,12 +104,14 @@ module.exports = {
 	},
 
 	moveCreep: function (creep, range) {
-		range = range || 1;
-
-		var moveToHere,
-			needsToMove;
 		try {
-			moveToHere = Game.getObjectById(creep.memory.destination);
+			range = range || 1;
+
+			var moveToHere,
+				needsToMove;
+
+
+			moveToHere = Game.getObjectById(creep.realMemory.destination);
 			needsToMove = !creep.pos.inRangeTo(moveToHere, range);
 			//console.log(range);
 			//creep.say(needsToMove);
@@ -217,6 +126,7 @@ module.exports = {
 
 		return needsToMove;
 	},
+
 	compareObjectProperties: function (property, order) {
 		order.toUpperCase();
 		switch ('ASC') {
@@ -226,9 +136,11 @@ module.exports = {
 					//console.log(property);
 					//console.log(a[property] - b[property]);
 					return a[property] - b[property];
-				}
+				};
+				//break;
 			case 'DESC':
 				return b[property] - a[property];
+				//break;
 			default:
 				break;
 		}
@@ -239,8 +151,10 @@ module.exports = {
 		if (result === 0 && spawn.spawning === null) {
 			result = spawn.createCreep(build, null, propertiesObj);
 			console.log(result + ' is one of us.');
+			//console.log(Game.creeps[result].id);
+			//Game.creeps[result].setProperties(propertiesObj);
 		} else if (result === -6) {
-			console.log('We are waiting for energy to build a better creep in room ' + roomName + '.')
+			console.log('We are waiting for energy to build a better creep in room ' + roomName + '.');
 		} else if (result !== -4) {
 			console.log('There was an error spawning creep in ' + roomName + ': ' + result);
 		}
@@ -248,17 +162,14 @@ module.exports = {
 	},
 
 	findCommonGround: function (firstRoomObject, secondRoomObject) {
-		var commonRoomObjects;
-
-		commonRoomObjects = [];
-
 		try {
+			var commonRoomObjects = [];
 			if (true) {
 				throw new Error('test');
 			}
 		}
 		catch (err) {
-			console.log("outer" + err.message);
+			console.log("There was a problem finding common ground: " + err.message);
 		}
 
 		return commonRoomObjects;
@@ -275,15 +186,18 @@ module.exports = {
 		try {
 			allConstruction = _.values(Game.constructionSites);
 			//console.log(JSON.stringify(allConstruction));
-			sortedConstruction = _.sortByOrder(allConstruction,
-				[function (o) {
-					return o.pos.roomName;
-				},
+			sortedConstruction = _.sortByOrder(
+				allConstruction,
+				[
+					function (o) {
+						return o.pos.roomName;
+					},
 					'progressTotal',
 					function (o) {
 						return o.progress / o.progressTotal;
-					}],
-					['asc', 'asc', 'desc']);
+					}
+				],
+				['asc', 'asc', 'desc']);
 
 			for (i = 0; i < sortedConstruction.length; i++) {
 				if (!constructionByRoom.propertyIsEnumerable(sortedConstruction[i].pos.roomName)) {
@@ -300,11 +214,13 @@ module.exports = {
 		catch (err) {
 			console.log("There was a problem creating a list of construction sites by room");
 		}
-
+		finally {
+			//placeholder
+		}
 	},
 
 	changeRole: function (creep, properties) {
-		creep.memory = properties;
+		creep.setProperties(properties);
 	},
 
 	prototypeThis: function () {
@@ -321,7 +237,7 @@ module.exports = {
 
 			_.forEach(creepsInRoom, function (n, key) {
 				var currentCreep = creepsInRoom[key],
-					currentRole = currentCreep.memory.role;
+					currentRole = currentCreep.realMemory.role;
 				if (!census.propertyIsEnumerable(currentRole)) {
 					census[currentRole] = [];
 					census[currentRole].push(currentCreep.id);
@@ -338,7 +254,122 @@ module.exports = {
 			//console.log(JSON.stringify(census));
 			return census;
 		};
+
+		Object.defineProperty(RoomObject.prototype, 'realMemory', {
+			get: function () {
+				try {
+					if (_.isUndefined(Memory[this.id])) {
+						Memory[this.id] = {};
+					}
+					if (!_.isObject(Memory[this.id])) {
+						return undefined;
+					}
+					return Memory[this.id] = Memory[this.id] || {};
+				}
+				catch (err) {
+					console.log(err.message);
+				}
+			},
+			set: function (value) {
+				try {
+					if (_.isUndefined(Memory[this.id])) {
+						Memory[this.id] = {};
+					}
+					if (!_.isObject(Memory[this.id])) {
+						throw new Error('Could not set RoomObject memory');
+					}
+					Memory[this.id] = value;
+				}
+				catch (err) {
+					console.log(err.message);
+				}
+			}
+		});
+
+		RoomObject.prototype.setProperties = function (propertyObject) {
+			var objectMemory = Memory[this.id];
+			console.log(JSON.stringify(objectMemory));
+
+
+			for (var key in propertyObject) {
+				// skip loop if the property is from prototype
+				if (!propertyObject.hasOwnProperty(key)) continue;
+				if (_.isUndefined(Memory[this.id][key])) {
+					objectMemory[key] = {};
+				}
+				objectMemory[key] = propertyObject[key];
+			}
+		};
+
+		RoomObject.prototype.resetProperties = function (propertyObject) {
+			var objectMemory = Memory[this.id];
+			//console.log(JSON.stringify(objectMemory));
+
+
+			for (var key in propertyObject) {
+				// skip loop if the property is from prototype
+				if (!propertyObject.hasOwnProperty(key)) continue;
+				if (_.isUndefined(Memory[this.id][key])) {
+					objectMemory[key] = {};
+				}
+				objectMemory[key] = propertyObject[key];
+			}
+		};
+
+		massSuicide = function (room) {
+			var creepsToDie = Game.rooms[room].find(FIND_MY_CREEPS);
+			for (var int in creepsToDie) {
+				creepName = creepsToDie[int].name;
+				Game.creeps[creepName].suicide();
+
+				console.log(creepName + ' drank the Kool-Aid. Onward to the ascension');
+			}
+		};
+
+
 	},
-}
+
+	performTask: function (){
+	
+	},
+
+	CreepDestination: function (destinationID) {
+			this.destinationID = destinationID;
+			this.pos = Game.getObjectById(destinationID).pos;
+	},
+
+	//CreepHarvest.prototype = new module.exports.CreepDestination() {
+	//	constructor(destinationID) {
+
+	//		//this.destinationID = destinationID;
+	//		//this.pos = Game.getObjectById(destiantionID).pos;
+	//		this.action = 'harvest';
+	//	}
+	//},
+
+
+	
+	//creepDestination: function (destinationID) {
+	//	return {
+	//		destinationID: destinationID,
+	//		pos: Game.getObjectById(destinationID).pos
+	//	}
+	//},
+
+	//CreepHarvest: class {
+	//	constructor(destinationID) {
+	//		try {
+	//			this.destination = module.exports.creepDestination(destinationID);
+	//			this.action = 'harvest';
+	//		}
+	//		catch (err) {
+	//			console.log('Problem creating task: ' + err.message)
+	//		}
+	//	}
+	//}
+
+};
+
+
 
 

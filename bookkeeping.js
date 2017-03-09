@@ -1,4 +1,4 @@
-﻿module.exports = {
+module.exports = {
 
 	containsRoom: function (room, list) {
 		for (i = 0; i < list.length; i++) {
@@ -23,7 +23,7 @@
 				roomsInfo.push({ ID: nameOfRoom, "rcl": Game.rooms[nameOfRoom].controller.level });
 				roomsInfo[roomsInfo.length - 1].name = nameOfRoom;
 			}
-			//	console.log(roomsInfo[0].ID);
+			//		console.log(roomsInfo[0].ID);
 		}
 
 		return roomsInfo;
@@ -43,11 +43,11 @@
 
 			if (!census.propertyIsEnumerable(allCreeps[i].room.name)) {
 				census[allCreeps[i].room.name] = {};
-				census[allCreeps[i].room.name][allCreeps[i].memory.role] = [memberInfo];
-			} else if (!census[allCreeps[i].room.name].propertyIsEnumerable([allCreeps[i].memory.role])) {
-				census[allCreeps[i].room.name][allCreeps[i].memory.role] = [memberInfo];
+				census[allCreeps[i].room.name][allCreeps[i].realMemory.role] = [memberInfo];
+			} else if (!census[allCreeps[i].room.name].propertyIsEnumerable([allCreeps[i].realMemory.role])) {
+				census[allCreeps[i].room.name][allCreeps[i].realMemory.role] = [memberInfo];
 			} else {
-				census[allCreeps[i].room.name][allCreeps[i].memory.role].push(memberInfo);
+				census[allCreeps[i].room.name][allCreeps[i].realMemory.role].push(memberInfo);
 			}
 		}
 		return census;
@@ -56,19 +56,19 @@
 	countCreeps: function (roomName) {
 		var localCreeps = _.values(Game.rooms[roomName].find(FIND_MY_CREEPS));
 		var census = [];
-		var currentRole
-		, creepObject
-		, creepInfo;
+		var currentRole,
+			creepObject,
+			creepInfo;
 
 		//console.log('length of localCreeps: ' + localCreeps.length);
 
 		for (i = 0; i < localCreeps.length; i++) {
 			//console.log(JSON.stringify(localCreeps[i]));
 			//currentCreep = { "id": localCreeps[i].id };
-			//currentRole = currentCreep.memory.role;
+			//currentRole = currentCreep.realMemory.role;
 
 			creepObject = Game.getObjectById(localCreeps[i].id);
-			currentRole = creepObject.memory.role;
+			currentRole = creepObject.realMemory.role;
 			creepInfo = { "room": roomName, "role": currentRole, "id": creepObject.id, "name": creepObject.name };
 			// console.log(JSON.stringify(creepInfo));
 			if (census.length === 0) {
@@ -79,7 +79,7 @@
 					//console.log("i=" + i + ", j=" + j + ', name=' + creepInfo.name + ' pre-match');
 					if (currentRole === census[j].role) {
 						//console.log("i=" + i + ", j=" + j + ', name=' + creepInfo.name + ' match');
-						census[j].members.push(creepObject)
+						census[j].members.push(creepObject);
 						j = census.length;
 					} else if (j === census.length - 1) {
 						//console.log("i=" + i + ", j=" + j + ', name=' + creepInfo.name + ' no match');
@@ -91,7 +91,7 @@
 		}
 
 		//for (i = 0; i < census.length; i++) {
-		//console.log(census[i].role + " count: " + census[i].members.length);
+		//	console.log(census[i].role + " count: " + census[i].members.length);
 		//}
 		//return census;
 	},
@@ -100,8 +100,15 @@
 		for (var name in Memory.creeps) {
 			if (!Game.creeps[name]) {
 				delete Memory.creeps[name];
-				console.log(name + ' has fallen.Let us remember.');
+				console.log(name + ' has fallen.	Let us remember.');
 			}
 		}
-	},
-}
+		for (var key in Memory) {
+			//
+			if (key === 'creeps' || key === 'spawns') continue;
+			if (Game.getObjectById(key) === null) {
+				delete Memory[key];
+			}
+		}
+	}
+};

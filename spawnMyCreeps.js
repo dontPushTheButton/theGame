@@ -1,4 +1,4 @@
-﻿var creepPrimitives = require('creepPrimitives');
+var creepPrimitives = require('creepPrimitives');
 
 module.exports = {
 	spawnAllCreeps: function (minBasicCreeps, basicCreepsInTheRoom, roomName, census) {
@@ -8,16 +8,16 @@ module.exports = {
 	},
 
 	spawnMyBasicCreeps: function (minBasicCreeps, basicCreepsInTheRoom, roomName, census) {
-		var basicCreep = [MOVE, WORK, CARRY, MOVE, WORK, CARRY
-		, MOVE, WORK, CARRY, MOVE, WORK, CARRY
-		, MOVE, WORK, CARRY, MOVE, WORK, CARRY
-		, MOVE, WORK, CARRY, MOVE, WORK, CARRY
-		, MOVE, WORK, CARRY, MOVE, WORK, CARRY
-		, MOVE, WORK, CARRY, MOVE, WORK, CARRY];
+		var basicCreep = [MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+			MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+			MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+			MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+			MOVE, WORK, CARRY, MOVE, WORK, CARRY,
+			MOVE, WORK, CARRY, MOVE, WORK, CARRY];
 		var allSpawns = _.values(Game.spawns);
 		var modifiedBody = basicCreep;
 		var spawn,
-		creepsInTheRoom;
+			creepsInTheRoom;
 
 		//console.log(JSON.stringify(roomName));
 
@@ -59,7 +59,7 @@ module.exports = {
 				result = spawn.createCreep(modifiedBody, null, { role: 'harvester', basic: true });
 				console.log(result + ' is one of us.');
 			} else if (result === -6) {
-				console.log('We are waiting for energy to build the best creep ' + roomName + '.')
+				console.log('We are waiting for energy to build the best creep ' + roomName + '.');
 			} else if (result !== -4) {
 				console.log('There was an error: ' + result);
 			}
@@ -67,7 +67,7 @@ module.exports = {
 	},
 
 	spawnTowerTenders: function (roomName, census) {
-		var towersInTheRoom = _.values(Game.rooms[roomName].find(FIND_MY_STRUCTURES, { filter: (structure) => { return (structure.structureType === STRUCTURE_TOWER) } }));
+		var towersInTheRoom = _.values(Game.rooms[roomName].find(FIND_MY_STRUCTURES, { filter: (structure) => { return structure.structureType === STRUCTURE_TOWER; } }));
 		var towerTenderBuild = [MOVE, CARRY];
 		var desiredNumTowerTenders,
 			actualNumTowerTenders,
@@ -87,7 +87,7 @@ module.exports = {
 		if (!census.propertyIsEnumerable("towerTender")) {
 			actualNumTowerTenders = 0;
 		} else {
-			actualNumTowerTenders = Game.rooms[roomName].find(FIND_MY_CREEPS, { filter: (creep) => { return (creep.memory.role === 'towerTender'); } }).length;
+			actualNumTowerTenders = Game.rooms[roomName].find(FIND_MY_CREEPS, { filter: (creep) => { return creep.realMemory.role === 'towerTender'; } }).length;
 			//console.log(JSON.stringify(!!spawn.spawning));
 			//console.log(actualNumTowerTenders.length);
 			//actualNumTowerTenders = census["towerTender"].length;
@@ -95,15 +95,16 @@ module.exports = {
 		//console.log('TT actual: ' + actualNumTowerTenders + ' TT desired: ' + desiredNumTowerTenders);
 		//console.log(JSON.stringify(spawn.spawning));
 		if (actualNumTowerTenders < desiredNumTowerTenders) {
+
 			result = creepPrimitives.spawnCreep(roomName, spawn, towerTenderBuild, { role: 'towerTender' }, 'We need energy to create a tower tender in room ' + roomName + '.');
 			//spawn.canCreateCreep(towerTenderBuild, null);
 			//if (result === 0 && spawn.spawning === null) {
-			//result = spawn.createCreep(towerTenderBuild, null, { role: 'towerTender' });
-			//console.log(result + ' is one of us.');
+			//	result = spawn.createCreep(towerTenderBuild, null, { role: 'towerTender' });
+			//	console.log(result + ' is one of us.');
 			//} else if (result === -6) {
-			//console.log('We have not the energy for a Tower Tender in room ' + roomName + '.')
+			//	console.log('We have not the energy for a Tower Tender in room ' + roomName + '.')
 			//} else if (result !== -4) {
-			//console.log('There was an error: ' + result);
+			//	console.log('There was an error: ' + result);
 			//}
 
 		}
@@ -116,9 +117,9 @@ module.exports = {
 
 	spawnColorguard: function (roomName) {
 		var colorguardBuild = [MOVE, WORK, CARRY, CLAIM];
-		var desiredNumColorguard
-		, actualNumColorGuard
-		, spawn;
+		var desiredNumColorguard,
+			actualNumColorGuard,
+			spawn;
 		spawn = Game.rooms[roomName].find(FIND_MY_SPAWNS)[0];
 		desiredNumColorguard = [Game.flags].length;//.length;
 		actualNumColorGuard = _(Game.creeps).filter({ memory: { role: 'color' } });
@@ -131,14 +132,14 @@ module.exports = {
 				result = spawn.createCreep(colorguardBuild, null, { role: 'colorguard' });
 				console.log(result + ' is one of us.');
 			} else if (result === -6) {
-				console.log('We have not the energy for a colorguard in room ' + roomName + '.')
+				console.log('We have not the energy for a colorguard in room ' + roomName + '.');
 			} else if (result !== -4) {
 				console.log('There was an error: ' + result);
 			}
 
 		}
 
-	},
-}
+	}
+};
 
 
